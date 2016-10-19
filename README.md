@@ -1,2 +1,4 @@
-# street-cleaning-alert
-A project to alert users of up coming street cleaning days and avoid parking tickets.
+street-cleaning-app
+This repository contains a python script that alerts a user of upcoming street cleaning days. 
+Its meant to be scheduled as a task via cron in Unix/Linux or launch in OSX. 
+This is an ongoing project as part of creating a better parking app. 
