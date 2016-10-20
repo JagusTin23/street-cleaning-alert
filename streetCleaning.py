@@ -14,6 +14,10 @@ from twilio.rest import TwilioRestClient
 tdy = datetime.datetime.now()
 t_start = tdy.strftime("%Y-%m-%d")
 
+# Only run if current day is Monday.  
+if tdy.isoweekday() != 1:
+    sys.exit(None)
+
 with open('./logs.txt') as f: 
     tlog = f.read().split()[0]
     if tlog == t_start:
