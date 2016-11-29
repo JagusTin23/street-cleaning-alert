@@ -19,7 +19,7 @@ t_start = tdy.strftime("%Y-%m-%d")
 if tdy.isoweekday() != 1:
     sys.exit(None)
 
-with open('./logs.txt') as f: 
+with open("./logs.txt") as f: 
     tlog = f.read().split()[0]
     if tlog == t_start:
         sys.exit(None)
@@ -39,7 +39,7 @@ def get_n_weekday(year, month, day_of_week, n):
             return d
     return None
 
-# A list containing current date with YMD numbers stored as individual objects.  
+# A list containing current date with YMD numbers stored as integer objects.  
 sDay = [int(_) for _ in t_start.split("-")]
 
 # To append with first and third Tuesday and Fridays of the month.  
@@ -82,15 +82,17 @@ for day in [tues, fri]:
         day = datetime.datetime.strptime(day, "%Y-%m-%d")
         daysToMove += [str(day.strftime("%A"))+" "+str(day.strftime("%m-%d"))]
 
-# Exists if no days are in daysToMove.  
+# Write current date to logs and exists if no days are in daysToMove.  
 if len(daysToMove) == 0:
+    with open("/Users/Tin/pScripts/sc/logs.txt", "w") as logs:
+        logs.write(str(tdy))
     sys.exit(None)
 
-if len(daysToMove) == 1: 
+elif len(daysToMove) == 1: 
     fbody = "Aloha! Street cleaning happens this week on {}.".format(daysToMove[0]) \
     + " Make sure to move your car ;)"
 
-elif len(daysToMove) == 2:
+else:
     fbody = "Aloha! Street cleaning happens this week on {} and {}.".format(daysToMove[0], 
     daysToMove[1]) + " Make sure to move your car ;)"
 
@@ -99,12 +101,12 @@ client = TwilioRestClient(account = "YOUR-TWILIO-ACCOUNT-NUMBER",
                             token = "YOUR-TWILIO-TOKEN")
 
 # Numbers to text street cleaning alerts.  
-numbers = ['(888) 888-8888', '(888) 888-8888']
+numbers = ["(888) 888-8888", "(888) 888-8888"]
 
 for number in numbers:
-    client.messages.create(from_='YOUR-TWILIO-NUMBER',
+    client.messages.create(from_="YOUR-TWILIO-NUMBER",
                        to= number,
                        body= fbody)
 
-with open('./logs.txt', "w") as logs:
+with open("./logs.txt", "w") as logs:
     logs.write(str(tdy))
