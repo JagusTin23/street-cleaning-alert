@@ -7,6 +7,7 @@
 # Year-Month-Day e.g. 2016-10-11.  
 
 import datetime
+from datetime import timedelta
 import time
 import sys
 from twilio.rest import TwilioRestClient
@@ -50,23 +51,36 @@ daysToChK = [2, 5]
 # First and third days of the month
 nth_days = [1, 3]
 
-# Returns all 1st and 3rd Tuesdays and Fridays of current month. 
+# Get all 1st and 3rd Tuesdays and Fridays of current month. 
 for dy in daysToChK:
     for nth_day in nth_days:
         street_cleaning = get_n_weekday(sDay[0], sDay[1], dy, nth_day)
-        street_cleaning_days.append(str(street_cleaning))
+        street_cleaning_days += [str(street_cleaning)]
+
+# Get all 1st and 3rd Tuesdays and Fridays of the following month
+if sDay[1] + 1 <= 12:
+    for dy in daysToChK:
+        for nth_day in nth_days:
+            street_cleaning = get_n_weekday(sDay[0], sDay[1] + 1, dy, nth_day)
+            street_cleaning_days += [str(street_cleaning)]
+else:
+    for dy in daysToChK:
+        for nth_day in nth_days:
+            street_cleaning = get_n_weekday(sDay[0] + 1, 1, dy, nth_day)
+            street_cleaning_days += [str(street_cleaning)]
+
+# Get dates of coming Tuesday and Friday.
+tues = (tdy + timedelta(days = 1)).strftime("%Y-%m-%d")
+fri = (tdy + timedelta(days = 4)).strftime("%Y-%m-%d")
 
 daysToMove = []
 
 # Appends daysToMove if Tues and Fri of current week are in street_cleaning_days.
-# Would be modified depending on day of wk interested for future app.
-# Appends daysToMove with date formated e.g. Tues 10/18 to print on text body.
-for num in [1,4]:
-    tues_fri = "-".join([str(sDay[0]), str(sDay[1]), str(sDay[2]+num)])
-    if tues_fri in street_cleaning_days:
-        day = [int(_) for _ in tues_fri.split("-")]
-        getday = datetime.date(day[0], day[1], day[2])
-        daysToMove.append(str(getday.strftime("%A"))+" "+str(getday.strftime("%m-%d")))
+# Date formated e.g. "Tuesday 10/18" to print on text body.
+for day in [tues, fri]:
+    if day in street_cleaning_days:
+        day = datetime.datetime.strptime(day, "%Y-%m-%d")
+        daysToMove += [str(day.strftime("%A"))+" "+str(day.strftime("%m-%d"))]
 
 # Exists if no days are in daysToMove.  
 if len(daysToMove) == 0:
