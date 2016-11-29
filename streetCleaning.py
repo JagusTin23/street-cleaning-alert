@@ -84,7 +84,7 @@ for day in [tues, fri]:
 
 # Write current date to logs and exists if no days are in daysToMove.  
 if len(daysToMove) == 0:
-    with open("/Users/Tin/pScripts/sc/logs.txt", "w") as logs:
+    with open("./logs.txt", "w") as logs:
         logs.write(str(tdy))
     sys.exit(None)
 
